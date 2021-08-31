@@ -16,7 +16,6 @@ app.use(express.json());
 // app.post('/', (req, res) => {
 //     res.send('You can post to this endpoint!')
 // })
-
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8'));
 
 app.get('/api/v1/tours', (req, res) => {
@@ -29,17 +28,16 @@ app.get('/api/v1/tours', (req, res) => {
     })
 });
 
-
 app.get('/api/v1/tours/:id', (req, res) => {
     console.log(req.params);
 
     const id = parseInt(req.params.id);
 
-    if (id >  tours.length) {
+    if (id > tours.length) {
         return res.status(404).json({
             status: 'Fail',
             message: 'Invalid id'
-        })
+        });
     }
 
     const tour = tours.find(el => el.id === id);
@@ -49,9 +47,8 @@ app.get('/api/v1/tours/:id', (req, res) => {
         data: {
             tour
         }
-    })
+    });
 });
-
 
 app.post('/api/v1/tours', (req, res) => {
     // console.log(req.body);
@@ -66,9 +63,26 @@ app.post('/api/v1/tours', (req, res) => {
             data: {
                 tour: newTour
             }
-        })
+        });
+    });
+});
+
+app.patch('/api/v1/tours/:id', (req, res) => {
+    if (parseInt(req.params.id) > tours.length)  {
+        return res.status(404).json({
+            status: 'Fail',
+            message: 'Invalid id'
+        });
+    }
+
+
+    res.status(200).json({
+        status: 'Success',
+        data: {
+            tour: '<Updated tour here>'
+        }
     })
-})
+});
 
 app.listen(PORT, () => {
     console.log(`App running on port ${PORT}...`);
