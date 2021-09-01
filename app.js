@@ -4,8 +4,6 @@ const tourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
 
 const app = express();
-const PORT = 3000;
-
 
 // Middlewars
 app.use(morgan('dev'));
@@ -30,7 +28,4 @@ app.use((req, res, next) => {
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`App running on port ${PORT}...`);
-});
+module.exports = app;
