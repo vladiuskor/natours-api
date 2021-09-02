@@ -10,7 +10,7 @@ const {
     checkBody
 } = require('../controllers/tourController');
 
-router.param('id', checkId);
+// router.param('id', checkId);
 
 
 router.route('/')
