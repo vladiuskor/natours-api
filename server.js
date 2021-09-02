@@ -30,6 +30,17 @@ const tourSchema = new mongoose.Schema({
 
 const Tour = mongoose.model('Tour', tourSchema);
 
+const testTour = new Tour({
+    name: 'The Ternopil Lake',
+    rating: 1,
+    price: 20
+})
+
+testTour.save()
+    .then(doc => {
+        console.log(doc)
+    }).catch(err => console.log('Error!', err))
+
 const app = require('./app');
 const {mongo} = require("mongoose");
 // console.log(process.env);
