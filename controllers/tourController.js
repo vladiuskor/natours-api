@@ -3,79 +3,134 @@ const Tour = require('./../models/tourModel');
 // const tours = JSON.parse(fs.readFileSync('./dev-data/data/tours-simple.json', 'utf-8'));
 
 // const checkId = (req, res, next, val) => {
-    // console.log(`Tour id is: ${val}`);
-    // if (parseInt(req.params.id) > tours.length) {
-    //     return res.status(404).json({
-    //         status: 'Fail',
-    //         message: 'Invalid id'
-    //     });
-    // }
-
-    // next();
+// console.log(`Tour id is: ${val}`);
+// if (parseInt(req.params.id) > tours.length) {
+//     return res.status(404).json({
+//         status: 'Fail',
+//         message: 'Invalid id'
+//     });
 // }
 
-const checkBody = (req, res, next) => {
-    if (!req.body.name || !req.body.price) {
-        return res.status(400).json({
+// next();
+// }
+
+const getAllTours = async (req, res) => {
+
+    try {
+        const tours = await Tour.find();
+
+        res.status(200).json({
+            status: 'success',
+            results: tours.length,
+            data: {
+                tours
+            }
+        })
+
+    } catch (err) {
+        res.status(400).json({
             status: 'fail',
-            message: 'missing name or price'
+            message: {
+                err
+            }
         })
     }
-    next()
+
+
 }
 
-const getAllTours = (req, res) => {
-    console.log(req.requestTime)
-    res.status(200).json({
-        status: 'success',
-        // results: tours.length,
-        // data: {
-        //     tours
-        // }
-    })
+const getTour = async (req, res) => {
+
+    try {
+        const tour = await Tour.findById(req.params.id)
+        res.status(200).json({
+            status: 'success',
+            data: {
+                tour
+            }
+        });
+
+    } catch (err) {
+        res.status(400).json({
+            status: 'fail',
+            message: {
+                err
+            }
+        })
+    }
 }
 
-const getTour = (req, res) => {
-    console.log(req.params);
+const createTour = async (req, res) => {
 
-    const id = parseInt(req.params.id);
+    try {
+        // const newTour = new Tour ({});
+        // newTour.save()
+        const newTour = await Tour.create(req.body);
 
-    // const tour = tours.find(el => el.id === id);
+        res.status(201).json({
+            status: 'success',
+            data: {
+                tour: newTour
+            }
+        });
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            // tour
-        }
-    });
+    } catch (err) {
+        res.status(400).json({
+            status: 'fail',
+            message: {
+                err,
+                error_text: err.errmsg
+            }
+        })
+    }
+
+
 }
 
-const createTour = (req, res) => {
+const updateTour = async (req, res) => {
 
-    res.status(201).json({
-        status: 'Success',
-        // data: {
-        //     tour: newTour
-        // }
-    });
+    try {
+        const tour =  await Tour.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        })
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                tour
+            }
+        })
+
+    } catch (err) {
+        res.status(400).json({
+            status: 'fail',
+            message: {
+                err
+            }
+        })
+    }
+
 }
 
-const updateTour = (req, res) => {
+const deleteTour = async (req, res) => {
 
-    res.status(200).json({
-        status: 'Success',
-        data: {
-            tour: '<Updated tour here>'
-        }
-    })
-}
+    try {
+        await Tour.findByIdAndDelete(req.params.id)
 
-const deleteTour = (req, res) => {
+        res.status(204).json({
+            status: 'success',
+            data: null
+        })
 
-    res.status(204).json({
-        status: 'Success',
-        data: null
-    })
+    } catch (err) {
+        res.status(400).json({
+            status: 'fail',
+            message: {
+                err
+            }
+        })
+    }
 }
 
 module.exports = {
@@ -84,6 +139,4 @@ module.exports = {
     createTour,
     updateTour,
     deleteTour,
-    checkId,
-    checkBody
 }
