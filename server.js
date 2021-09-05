@@ -14,19 +14,7 @@ mongoose.connect(process.env.DATABASE_LOCAL, {
     .catch(err => console.log(err))
 
 
-// const testTour = new Tour({
-//     name: 'The Ternopil Lake',
-//     rating: 1,
-//     price: 20
-// })
-
-// testTour.save()
-//     .then(doc => {
-//         console.log(doc)
-//     }).catch(err => console.log('Error!', err))
-
 const app = require('./app');
-// console.log(process.env);
 
 app.listen(PORT, () => {
     console.log(`App running on port ${PORT}...`);
