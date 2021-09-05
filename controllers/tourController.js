@@ -17,8 +17,35 @@ const Tour = require('./../models/tourModel');
 const getAllTours = async (req, res) => {
 
     try {
-        const tours = await Tour.find();
+        //Build query
+        const queryObj = {...req.query};
+        const excludedFields = ['page', 'sort', 'limit', 'fields'];
 
+        excludedFields.forEach( elem => delete queryObj[elem]);
+        console.log(req.query, queryObj)
+
+        const query =  Tour.find(queryObj);
+        // Execute query
+        const tours = await query;
+
+        // Filtering. Method 1 (hardcode)
+        // ===========================
+        // const tours = Tour.find({
+        //     duration: 5,
+        //     difficulty: 'easy'
+        // });
+
+
+        // Filtering. Method 2
+        // ===========================
+        // const tours = Tour.find()
+        //     .where('duration')
+        //     .equals(5)
+        //     .where('difficulty')
+        //     .equals('easy')
+
+
+        //Send response
         res.status(200).json({
             status: 'success',
             results: tours.length,
@@ -90,7 +117,7 @@ const createTour = async (req, res) => {
 const updateTour = async (req, res) => {
 
     try {
-        const tour =  await Tour.findByIdAndUpdate(req.params.id, req.body, {
+        const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
         })
