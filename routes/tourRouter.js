@@ -6,11 +6,12 @@ const {
     createTour,
     updateTour,
     deleteTour,
-    checkId,
+    aliasTopTours,
 } = require('../controllers/tourController');
 
 // router.param('id', checkId);
-
+router.route('/top-5-cheap')
+    .get(aliasTopTours, getAllTours);
 
 router.route('/')
     .get(getAllTours)
