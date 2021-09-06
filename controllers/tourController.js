@@ -19,7 +19,7 @@ const getAllTours = async (req, res) => {
     try {
         // BUILD QUERY
 
-        // 1) Filtering
+        // 1-a) Filtering
 
         // Filtering. Method 1 (hardcode)
         // ===========================
@@ -41,16 +41,33 @@ const getAllTours = async (req, res) => {
         const excludedFields = ['page', 'sort', 'limit', 'fields'];
 
         excludedFields.forEach( elem => delete queryObj[elem]);
-        // 2) Advanced filtering
+        // 1-b) Advanced filtering
         let queryStr = JSON.stringify(queryObj);
         // gte, gt, lte, lt
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-        const query =  Tour.find(JSON.parse(queryStr));
+        let query =  Tour.find(JSON.parse(queryStr));
 
         console.log(req.query);
         console.log(queryObj);
         console.log(JSON.parse(queryStr));
+
+        // 2) Sorting data
+        if(req.query.sort) {
+            const sortBy = req.query.sort.split(',').join(' ');
+            console.log(sortBy);
+            query = query.sort(sortBy);
+        } else {
+            query = query.sort('-createdAt');
+        }
+
+        // 3) Field limiting
+        if(req.query.fields) {
+            const fields = req.query.fields.split(',').join(' ');
+            query = query.select(fields);
+        } else {
+            query = query.select('-__v');
+        }
 
 
         // EXECUTE QUERY
