@@ -23,7 +23,7 @@ router.post('/login', logIn);
 router.post('/forgotPassword', forgotPassword);
 router.patch('/resetPassword/:token', resetPassword);
 
-// router.patch('/updateMyPassword', protect, updatePassword);
+router.patch('/updateMyPassword', protect, updatePassword);
 
 router.route('/')
     .get(getAllUsers)
