@@ -1,9 +1,19 @@
 const mongoose = require('mongoose');
-const Tour = require('./models/tourModel');
 const dotenv = require('dotenv');
-const PORT = process.env.PORT || 3000;
 
-dotenv.config({path: './config.env'})
+//Global uncaught exceptions EXAMPLES
+process.on('uncaughtException', err => {
+    console.log('Uncaught Exception!!! Shutting down...');
+    console.log(err.name, err.message);
+    server.close(() => {
+        process.exit(1);
+    })
+})
+
+
+dotenv.config({path: './config.env'});
+const app = require('./app');
+
 
 mongoose.connect(process.env.DATABASE_LOCAL, {
     useNewUrlParser: true,
@@ -14,8 +24,8 @@ mongoose.connect(process.env.DATABASE_LOCAL, {
     .catch(err => console.log(err))
 
 
-const app = require('./app');
 
+const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
     console.log(`App running on port ${PORT}...`);
 });
@@ -29,11 +39,3 @@ process.on('unhandledRejection', err => {
     })
 });
 
-//Global uncaught exceptions EXAMPLES
-process.on('uncaughtException', err => {
-    console.log('Uncaught Exception!!! Shutting down...');
-    console.log(err.name, err.message);
-    server.close(() => {
-        process.exit(1);
-    })
-})
