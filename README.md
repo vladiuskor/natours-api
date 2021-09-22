@@ -15,3 +15,8 @@ Technologies which I used:
    - validator
    - morgan 
    - dotenv
+   - express-rate-limit
+   - express-mongo-sanitize
+   - helmet
+   - xss-clean
+   - hpp
