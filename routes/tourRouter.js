@@ -33,6 +33,13 @@ router.route('/monthly-plan/:year').get(
 );
 
 router
+    .route('/tours-within/:distance/center/:latlng/unit/:unit')
+    .get(tourController.getToursWithin);
+// /tours-distance?distance=233&center=-40,45&unit=miles  the usual way!
+
+// /tours-distance/233/center/-40,45/unit/mi We use this way!!!
+
+router
     .route('/')
     .get(tourController.getAllTours)
     .post(
@@ -54,7 +61,6 @@ router
         authController.restrictTo('admin', 'lead-guide'),
         tourController.deleteTour
     );
-
 
 
 module.exports = router;
